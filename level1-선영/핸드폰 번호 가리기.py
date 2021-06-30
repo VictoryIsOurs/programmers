@@ -8,3 +8,9 @@ def solution(phone_number):
         star_str += "*"
         
     return star_str + phone_number[-4::]
+
+
+
+#최적화된 코드
+def hide_numbers(s):
+    return "*"(len(s)-4) + s[-4::]
