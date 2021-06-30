@@ -13,4 +13,4 @@ def solution(phone_number):
 
 #최적화된 코드
 def hide_numbers(s):
-    return "*"(len(s)-4) + s[-4::]
+    return "*"(len(s)-4) + s[-4::]  #문자열은 곱셈이 된다 !!!!!!!!
