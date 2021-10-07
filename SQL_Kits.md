@@ -50,5 +50,98 @@ limit 1;    --레코드 하나만 추출
 ~~~
 -----------------------------
 
+## 중복 제거하기 (☆☆☆☆☆☆)
+~~~sql
+select count(distinct(NAME))   --☆☆☆☆☆ distinct가 들어가는 부분 잘 보기
+from ANIMAL_INS
+where NAME is not null    -- null이 아니라는 제약조건 꼭 보기
+~~~
+--------------------------------
+
+## 
+~~~sql
+SELECT ANIMAL_TYPE, COUNT(ANIMAL_TYPE) 
+FROM ANIMAL_INS 
+GROUP BY ANIMAL_TYPE 
+ORDER BY ANIMAL_TYPE  ---개와 고양이를 구분해주라고 했으니,, 이게 들어가야 함!
+~~~
+
+-----------------------------
+
+## 동명 동물 수 찾기
+~~~sql
+SELECT NAME, count(NAME)
+FROM ANIMAL_INS
+WHERE NAME is NOT NULL
+GROUP BY NAME
+HAVING COUNT(NAME) >= 2
+order by NAME asc
+~~~
+---------------------------
+
+## 입양시각 구하기(1)
+~~~sql
+SELECT HOUR(DATETIME) as HOUR , count(ANIMAL_ID) as COUNT  ---시간 구할 떄는 HOUR(  ) 함수 쓰기!!!
+from ANIMAL_OUTS
+where HOUR(DATETIME) BETWEEN 9 and 19 
+group by HOUR(DATETIME)
+order by HOUR(DATETIME) asc;
+~~~
+-----------------------
+
+## NULL처리하기 
+IFNULL(컬럼명, NULL 시 값);
+
+~~~sql
+SELECT ANIMAL_TYPE, IFNULL(NAME, 'No name') , SEX_UPON_INTAKE
+from ANIMAL_INS
+order by ANIMAL_ID
+~~~
+
+-----------------------
+
+## 없어진 기록 찾기 (left outer join ~~ on ~~ where ~)
+~~~sql
+--왼쪽 테이블을 기준으로 비교한다.
+SELECT ANIMAL_OUTS.ANIMAL_ID, ANIMAL_OUTS.NAME
+from ANIMAL_OUTS
+left outer join ANIMAL_INS 
+on ANIMAL_OUTS.ANIMAL_ID = ANIMAL_INS.ANIMAL_ID
+where ANIMAL_INS.ANIMAL_ID is null
+order by ANIMAL_OUTS.ANIMAL_ID, ANIMAL_OUTS.NAME
+~~~
 
 
+----------------------
+## 오랜기간 보호한 동물(1)
+~~~sql
+SELECT ANIMAL_INS.NAME, ANIMAL_INS.DATETIME
+from ANIMAL_INS
+left join ANIMAL_OUTS
+on ANIMAL_INS.ANIMAL_ID = ANIMAL_OUTS.ANIMAL_ID
+where ANIMAL_OUTS.ANIMAL_ID is null
+order by ANIMAL_INS.DATETIME asc
+limit 3;
+~~~
+
+---------------------
+
+## 보호소에서 중성화한 동물
+~~~sql
+SELECT ANIMAL_INS.ANIMAL_ID, ANIMAL_INS.ANIMAL_TYPE, ANIMAL_INS.NAME
+from ANIMAL_INS
+left join ANIMAL_OUTS
+on ANIMAL_INS.ANIMAL_ID = ANIMAL_OUTS.ANIMAL_ID
+where ANIMAL_INS.SEX_UPON_INTAKE like '%Intact%' and (ANIMAL_OUTS.SEX_UPON_OUTCOME like '%Spayed%' or ANIMAL_OUTS.SEX_UPON_OUTCOME like '%Neutered%')
+order by ANIMAL_INS.ANIMAL_ID
+~~~
+
+-------------------------
+
+## DATE형 변환
+~~~sql
+SELECT ANIMAL_ID, NAME, DATE_FORMAT(DATETIME, '%Y-%m-%d') as '날짜'
+from ANIMAL_INS
+order by ANIMAL_ID;
+~~~
+-----------------------------
