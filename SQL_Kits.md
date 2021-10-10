@@ -8,7 +8,8 @@ order by ANIMAL_ID;
 --------------------------------------------
 #### 역순 배열 - desc 사용
 ~~~sql
-SELECT NAME, DATETIME from ANIMAL_INS   --- select 어떤걸 해줘야 하는지 잘 보기
+SELECT NAME, DATETIME
+from ANIMAL_INS   --- select 어떤걸 해줘야 하는지 잘 보기
 order by ANIMAL_ID desc;
 ~~~
 ---------------------------
@@ -22,7 +23,7 @@ order by ANIMAL_ID desc;
 -------------------------
 
 
-## 상위 n개의 레코드 
+## 상위 n개의 레코드 (limit !!!) 
 ~~~MySQL
 MySQL의 경우 : NAME 값을 조회하는데 가장 맨 위 행 1개만을 조회하기 위해 LIMIT 구문을 사용해야 합니다.
 LIMIT 1 : 맨 위에서부터 1개까지의 정보 조회
@@ -33,6 +34,7 @@ FROM ANIMAL_INS
 ORDER BY DATETIME
 LIMIT 1
 ~~~
+
 ~~~sql
 SELECT NAME
 from ANIMAL_INS
@@ -50,7 +52,7 @@ limit 1;    --레코드 하나만 추출
 ~~~
 -----------------------------
 
-## 중복 제거하기 (☆☆☆☆☆☆)
+## 중복 제거하기 (☆☆☆☆☆☆) ☆☆☆☆☆ distinct
 ~~~sql
 select count(distinct(NAME))   --☆☆☆☆☆ distinct가 들어가는 부분 잘 보기
 from ANIMAL_INS
@@ -58,7 +60,7 @@ where NAME is not null    -- null이 아니라는 제약조건 꼭 보기
 ~~~
 --------------------------------
 
-## 
+## 개와 고양이 구분해주기
 ~~~sql
 SELECT ANIMAL_TYPE, COUNT(ANIMAL_TYPE) 
 FROM ANIMAL_INS 
@@ -74,7 +76,7 @@ SELECT NAME, count(NAME)
 FROM ANIMAL_INS
 WHERE NAME is NOT NULL
 GROUP BY NAME
-HAVING COUNT(NAME) >= 2
+HAVING COUNT(NAME) >= 2  -- 그룹바이 안에서의 조건 명시 
 order by NAME asc
 ~~~
 ---------------------------
@@ -145,3 +147,12 @@ from ANIMAL_INS
 order by ANIMAL_ID;
 ~~~
 -----------------------------
+
+
+##인터넷 예제 : 환승역 출력
+~~~sql
+select COLOR, count(COLOR)
+from line as A
+left join line as B
+on A.id = B.id
+order by 제약조건;
