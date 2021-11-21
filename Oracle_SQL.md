@@ -156,11 +156,21 @@ ORDER BY A.DATETIME
 ~~~
 
 
-### 
+### 오랜 기간 보호한 동물
 ~~~sql
-SELECT * FROM ( SELECT ANIMAL_INS.NAME, ANIMAL_INS.DATETIME FROM ANIMAL_INS LEFT OUTER JOIN ANIMAL_OUTS ON ANIMAL_INS.ANIMAL_ID = ANIMAL_OUTS.ANIMAL_ID WHERE ANIMAL_OUTS.ANIMAL_ID IS NULL ORDER BY ANIMAL_INS.DATETIME ) WHERE ROWNUM <= 3;
+SELECT * 
+FROM (
+    SELECT i_name, i_date
+    FROM (
+        SELECT ANIMAL_INS.NAME AS i_name, ANIMAL_INS.DATETIME AS i_date, ANIMAL_OUTS.DATETIME As o_date
+        FROM ANIMAL_INS LEFT OUTER JOIN ANIMAL_OUTS
+        ON ANIMAL_INS.ANIMAL_ID = ANIMAL_OUTS.ANIMAL_ID
+        )
+    WHERE o_date is NULL
+    ORDER BY i_date
+    )
+WHERE ROWNUM <=3
 
-출처: https://youngsubee.tistory.com/entry/SQL-오랜-기간-보호한-동물1-풀것 [기록]
 ~~~
 
 -----------------------------------------------------------------------
